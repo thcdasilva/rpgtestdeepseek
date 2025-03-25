@@ -13,6 +13,7 @@
             --red: #8b0000;
             --blue: #1e90ff;
             --green: #228b22;
+            --purple: #800080;
         }
         
         body {
@@ -25,6 +26,7 @@
             background-size: cover;
             background-attachment: fixed;
             line-height: 1.6;
+            user-select: none;
         }
         
         #game-container {
@@ -69,12 +71,29 @@
             font-size: 16px;
             transition: all 0.3s;
             text-align: left;
+            position: relative;
         }
         
         .option-btn:hover {
             background-color: #1a1a1a;
             border-color: var(--gold);
             color: var(--gold);
+        }
+        
+        .option-btn::after {
+            content: "Clique para selecionar";
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 12px;
+            color: #666;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .option-btn:hover::after {
+            opacity: 1;
         }
         
         #character-sheet {
@@ -128,6 +147,30 @@
             padding: 5px;
             border: 1px solid #333;
             cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .inventory-item:hover {
+            border-color: var(--gold);
+            background-color: rgba(210, 180, 140, 0.1);
+        }
+        
+        .inventory-item::after {
+            content: "Clique para usar";
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            font-size: 11px;
+            color: #666;
+            opacity: 0;
+            transition: opacity 0.3s;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .inventory-item:hover::after {
+            opacity: 1;
         }
         
         #dice-roll {
@@ -192,11 +235,29 @@
             cursor: pointer;
             transition: all 0.3s;
             text-align: center;
+            position: relative;
         }
         
         .class-card:hover {
             border-color: var(--gold);
             transform: scale(1.05);
+        }
+        
+        .class-card::after {
+            content: "Clique para selecionar";
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .class-card:hover::after {
+            opacity: 1;
         }
         
         .class-card img {
@@ -266,6 +327,7 @@
             border: 1px solid var(--red);
             font-size: 18px;
             cursor: pointer;
+            transition: all 0.3s;
         }
         
         #restart-btn:hover {
@@ -298,6 +360,7 @@
             border: 1px solid var(--gold);
             cursor: pointer;
             font-size: 16px;
+            transition: all 0.3s;
         }
         
         #confirm-name:hover {
@@ -306,6 +369,13 @@
         
         .skill {
             margin-bottom: 10px;
+            cursor: pointer;
+            padding: 5px;
+            transition: all 0.2s;
+        }
+        
+        .skill:hover {
+            background-color: rgba(255, 255, 255, 0.1);
         }
         
         .skill-name {
@@ -333,6 +403,207 @@
             padding: 10px;
             border: 1px solid var(--gold);
         }
+        
+        /* Shop styles */
+        #shop-container {
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .shop-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+            border-bottom: 1px solid #333;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .shop-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .shop-item:last-child {
+            border-bottom: none;
+        }
+        
+        .shop-item-name {
+            font-weight: bold;
+        }
+        
+        .shop-item-price {
+            color: var(--gold);
+        }
+        
+        .buy-btn {
+            padding: 5px 10px;
+            background-color: rgba(0, 100, 0, 0.5);
+            border: 1px solid #333;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .buy-btn:hover {
+            background-color: rgba(0, 100, 0, 0.8);
+        }
+        
+        .sell-btn {
+            padding: 5px 10px;
+            background-color: rgba(139, 0, 0, 0.5);
+            border: 1px solid #333;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .sell-btn:hover {
+            background-color: rgba(139, 0, 0, 0.8);
+        }
+        
+        /* Quest log styles */
+        #quest-log {
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .quest-entry {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-left: 3px solid var(--gold);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .quest-entry:hover {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        
+        .quest-title {
+            font-weight: bold;
+            color: var(--gold);
+            margin-bottom: 5px;
+        }
+        
+        .quest-completed {
+            color: var(--green);
+            font-style: italic;
+        }
+        
+        /* Rune styles */
+        .rune {
+            border-color: var(--purple);
+        }
+        
+        .rune:hover {
+            border-color: #ba55d3;
+        }
+        
+        /* NPC dialog styles */
+        .npc-dialog {
+            font-style: italic;
+            color: #add8e6;
+            margin-bottom: 10px;
+        }
+        
+        /* Item rarity colors */
+        .common { color: var(--text-color); }
+        .uncommon { color: #1e90ff; }
+        .rare { color: #ffd700; }
+        .epic { color: #9370db; }
+        .legendary { color: #ff8c00; }
+        
+        /* UI Controls */
+        #ui-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+        }
+        
+        .control-btn {
+            padding: 8px 15px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid #333;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            flex: 1;
+            margin: 0 5px;
+        }
+        
+        .control-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: var(--gold);
+        }
+        
+        .control-btn::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 5px;
+            border-radius: 3px;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            width: max-content;
+        }
+        
+        .control-btn:hover::after {
+            opacity: 1;
+        }
+        
+        /* Context menu */
+        .context-menu {
+            position: absolute;
+            background-color: var(--darker-bg);
+            border: 1px solid var(--gold);
+            z-index: 1000;
+            min-width: 150px;
+            display: none;
+        }
+        
+        .context-menu-item {
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+        
+        .context-menu-item:hover {
+            background-color: rgba(255, 215, 0, 0.2);
+        }
+        
+        /* Tooltips */
+        [data-tooltip] {
+            position: relative;
+        }
+        
+        [data-tooltip]::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 5px;
+            border-radius: 3px;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            width: max-content;
+            pointer-events: none;
+        }
+        
+        [data-tooltip]:hover::after {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -343,9 +614,9 @@
         <div id="main-menu">
             <h2>Menu Principal</h2>
             <div id="options-container">
-                <button class="option-btn" onclick="startNewGame()">Novo Jogo</button>
-                <button class="option-btn" onclick="loadGame()">Carregar Jogo</button>
-                <button class="option-btn" onclick="showCredits()">Créditos</button>
+                <button class="option-btn" onclick="startNewGame()" data-tooltip="Começar uma nova aventura">Novo Jogo</button>
+                <button class="option-btn" onclick="loadGame()" data-tooltip="Continuar sua jornada salva">Carregar Jogo</button>
+                <button class="option-btn" onclick="showCredits()" data-tooltip="Ver créditos do jogo">Créditos</button>
             </div>
         </div>
         
@@ -353,27 +624,27 @@
             <h2>Criação de Personagem</h2>
             <div id="options-container">
                 <label for="name-input">Nome do Herói:</label>
-                <input type="text" id="name-input" placeholder="Digite seu nome">
-                <button id="confirm-name" onclick="confirmName()">Confirmar</button>
+                <input type="text" id="name-input" placeholder="Digite seu nome" data-tooltip="Escolha um nome para seu personagem">
+                <button id="confirm-name" onclick="confirmName()" data-tooltip="Confirmar seu nome">Confirmar</button>
                 
                 <h3>Escolha sua Classe</h3>
                 <div id="class-selection">
-                    <div class="class-card knight" onclick="selectClass('knight')">
+                    <div class="class-card knight" onclick="selectClass('knight')" data-tooltip="Guerreiro forte e resistente">
                         <img src="https://i.imgur.com/XJQZQ9q.jpg" alt="Knight">
                         <h4>Cavaleiro</h4>
                         <p>Força bruta e resistência</p>
                     </div>
-                    <div class="class-card archer" onclick="selectClass('archer')">
+                    <div class="class-card archer" onclick="selectClass('archer')" data-tooltip="Atirador preciso e ágil">
                         <img src="https://i.imgur.com/YJQZQ9q.jpg" alt="Archer">
                         <h4>Arqueiro</h4>
                         <p>Precisão e agilidade</p>
                     </div>
-                    <div class="class-card sorcerer" onclick="selectClass('sorcerer')">
+                    <div class="class-card sorcerer" onclick="selectClass('sorcerer')" data-tooltip="Mestre das artes arcanas">
                         <img src="https://i.imgur.com/ZJQZQ9q.jpg" alt="Sorcerer">
                         <h4>Feiticeiro</h4>
                         <p>Magia arcana destrutiva</p>
                     </div>
-                    <div class="class-card druid" onclick="selectClass('druid')">
+                    <div class="class-card druid" onclick="selectClass('druid')" data-tooltip="Guardião da natureza">
                         <img src="https://i.imgur.com/WJQZQ9q.jpg" alt="Druid">
                         <h4>Druida</h4>
                         <p>Cura e magia natural</p>
@@ -389,6 +660,14 @@
             </div>
             
             <div id="options-container"></div>
+            
+            <div id="ui-controls">
+                <div class="control-btn" onclick="toggleCharacterSheet()" data-tooltip="Abrir status do personagem">Status</div>
+                <div class="control-btn" onclick="toggleInventory()" data-tooltip="Abrir inventário">Inventário</div>
+                <div class="control-btn" onclick="toggleSkills()" data-tooltip="Ver habilidades">Habilidades</div>
+                <div class="control-btn" onclick="toggleQuestLog()" data-tooltip="Ver missões">Missões</div>
+                <div class="control-btn" onclick="toggleMap()" data-tooltip="Ver mapa">Mapa</div>
+            </div>
             
             <div id="character-sheet">
                 <h3>Status do Personagem</h3>
@@ -457,11 +736,25 @@
             <div id="inventory">
                 <h3>Inventário</h3>
                 <div id="inventory-items"></div>
+                <button class="option-btn" onclick="toggleShop()" data-tooltip="Visitar loja para comprar/vender itens">Visitar Loja</button>
+            </div>
+            
+            <div id="shop-container">
+                <h3>Loja</h3>
+                <div id="shop-items"></div>
+                <button class="option-btn" onclick="toggleShop()" data-tooltip="Voltar ao inventário">Voltar</button>
+            </div>
+            
+            <div id="quest-log">
+                <h3>Registro de Missões</h3>
+                <div id="quests-list"></div>
+                <button class="option-btn" onclick="toggleQuestLog()" data-tooltip="Voltar ao jogo">Voltar</button>
             </div>
             
             <div id="map-container">
                 <h3>Mapa</h3>
                 <div id="map"></div>
+                <button class="option-btn" onclick="toggleMap()" data-tooltip="Voltar ao jogo">Voltar</button>
             </div>
             
             <div id="combat-log"></div>
@@ -472,14 +765,16 @@
         <h3>Rolagem de Dados</h3>
         <p id="dice-reason">Teste de habilidade</p>
         <div id="dice-result">?</div>
-        <button onclick="closeDiceRoll()">Continuar</button>
+        <button onclick="closeDiceRoll()" data-tooltip="Continuar a aventura">Continuar</button>
     </div>
     
     <div id="game-over">
         <h2>FIM DE JOGO</h2>
         <p id="game-over-text">Sua jornada chegou ao fim...</p>
-        <button id="restart-btn" onclick="restartGame()">Jogar Novamente</button>
+        <button id="restart-btn" onclick="restartGame()" data-tooltip="Começar um novo jogo">Jogar Novamente</button>
     </div>
+    
+    <div id="context-menu" class="context-menu"></div>
     
     <script>
         // Game state
@@ -504,12 +799,16 @@
                 knownSpells: [],
                 currentLocation: "thais",
                 quests: [],
-                kills: {}
+                kills: {},
+                completedQuests: []
             },
             currentEnemy: null,
             currentStory: "start",
             combatActive: false,
-            gameOver: false
+            gameOver: false,
+            shopInventory: [],
+            runeShopInventory: [],
+            questData: {}
         };
         
         // Classes data
@@ -530,7 +829,7 @@
                     { name: "Escudo", type: "defense", bonus: "+2 AC", cost: 0 },
                     { name: "Investida", type: "attack", damage: "1d10+str", cost: 5, cooldown: 3 }
                 ],
-                startingItems: ["Espada Longa", "Escudo de Madeira", "Armadura de Couro"]
+                startingItems: ["Espada Longa", "Escudo de Madeira", "Armadura de Couro", "Poção de Cura"]
             },
             archer: {
                 name: "Arqueiro",
@@ -548,7 +847,7 @@
                     { name: "Tiro Preciso", type: "attack", damage: "2d4+dex", cost: 5 },
                     { name: "Flecha Envenenada", type: "attack", damage: "1d6+dex", effect: "veneno", cost: 8, cooldown: 4 }
                 ],
-                startingItems: ["Arco Curto", "Flechas (20)", "Armadura de Couro"]
+                startingItems: ["Arco Curto", "Flechas (20)", "Armadura de Couro", "Poção de Cura"]
             },
             sorcerer: {
                 name: "Feiticeiro",
@@ -566,7 +865,8 @@
                     { name: "Raio de Gelo", type: "spell", damage: "1d8+int", effect: "slow", cost: 6 },
                     { name: "Névoa Arcana", type: "spell", effect: "blind", cost: 10, cooldown: 5 }
                 ],
-                startingItems: ["Cajado Arcano", "Poção de Mana (2)", "Túnica do Aprendiz"]
+                startingItems: ["Cajado Arcano", "Poção de Mana (2)", "Túnica do Aprendiz", "Poção de Cura"],
+                knownSpells: ["Bola de Fogo", "Raio de Gelo", "Névoa Arcana"]
             },
             druid: {
                 name: "Druida",
@@ -584,35 +884,252 @@
                     { name: "Chicote de Vinha", type: "spell", damage: "1d6+int", cost: 4 },
                     { name: "Armadura de Espinhos", type: "spell", effect: "thorns", cost: 8, duration: 3 }
                 ],
-                startingItems: ["Cajado de Carvalho", "Poção de Cura (2)", "Túnica do Druida"]
+                startingItems: ["Cajado de Carvalho", "Poção de Cura (2)", "Túnica do Druida", "Poção de Mana"],
+                knownSpells: ["Cura Menor", "Chicote de Vinha", "Armadura de Espinhos"]
             }
         };
         
-        // Locations data
-        const locations = {
-            thais: {
-                name: "Cidade de Thais",
-                description: "A capital do reino, uma cidade movimentada com pessoas de todos os tipos.",
-                connections: ["north", "east", "south", "west"],
-                north: "north_gate",
-                east: "east_gate",
-                south: "south_gate",
-                west: "west_gate",
-                npcs: ["mercador", "guarda", "bardo"],
-                quests: ["ratazana", "entrega"],
-                image: "https://i.imgur.com/XJQZQ9q.jpg"
+        // Items data
+        const items = {
+            "Poção de Cura": {
+                type: "consumable",
+                effect: "heal",
+                value: "2d6+4",
+                price: 50,
+                rarity: "common",
+                description: "Restaura pontos de vida."
             },
-            north_gate: {
-                name: "Portão Norte de Thais",
-                description: "O portão norte da cidade, que leva para as terras selvagens do norte.",
-                connections: ["south", "north"],
-                south: "thais",
-                north: "north_road",
-                npcs: ["guarda"],
-                enemies: ["ratazana"],
-                image: "https://i.imgur.com/YJQZQ9q.jpg"
+            "Poção de Mana": {
+                type: "consumable",
+                effect: "restore mana",
+                value: "2d4+4",
+                price: 60,
+                rarity: "common",
+                description: "Restaura pontos de mana."
             },
-            // More locations can be added here
+            "Espada Longa": {
+                type: "weapon",
+                damage: "1d8",
+                price: 150,
+                rarity: "common",
+                description: "Uma espada padrão para cavaleiros."
+            },
+            "Arco Curto": {
+                type: "weapon",
+                damage: "1d6",
+                price: 120,
+                rarity: "common",
+                description: "Um arco simples para ataques à distância."
+            },
+            "Cajado Arcano": {
+                type: "weapon",
+                damage: "1d4",
+                magicBonus: "+1",
+                price: 100,
+                rarity: "uncommon",
+                description: "Aumenta o poder das magias em 1 ponto."
+            },
+            "Cajado de Carvalho": {
+                type: "weapon",
+                damage: "1d4",
+                healBonus: "+1",
+                price: 100,
+                rarity: "uncommon",
+                description: "Aumenta a cura das magias em 1 ponto."
+            },
+            "Armadura de Couro": {
+                type: "armor",
+                armor: 2,
+                price: 80,
+                rarity: "common",
+                description: "Armadura básica de couro."
+            },
+            "Túnica do Aprendiz": {
+                type: "armor",
+                armor: 1,
+                manaBonus: 5,
+                price: 100,
+                rarity: "uncommon",
+                description: "Aumenta o mana máximo em 5 pontos."
+            },
+            "Túnica do Druida": {
+                type: "armor",
+                armor: 1,
+                healBonus: 1,
+                price: 100,
+                rarity: "uncommon",
+                description: "Aumenta a cura em 1 ponto."
+            },
+            "Escudo de Madeira": {
+                type: "shield",
+                armor: 2,
+                price: 70,
+                rarity: "common",
+                description: "Escudo básico de madeira."
+            },
+            "Flechas (20)": {
+                type: "ammo",
+                quantity: 20,
+                price: 10,
+                rarity: "common",
+                description: "Pacote com 20 flechas."
+            },
+            "Cauda de Ratazana": {
+                type: "quest",
+                price: 5,
+                rarity: "common",
+                description: "Item de quest para o mercador."
+            },
+            "Pele de Ratazana": {
+                type: "material",
+                price: 3,
+                rarity: "common",
+                description: "Pode ser vendida ou usada em crafting."
+            },
+            "Dente de Ratazana": {
+                type: "material",
+                price: 2,
+                rarity: "common",
+                description: "Pode ser vendida ou usada em crafting."
+            },
+            "Runa UH": {
+                type: "rune",
+                effect: "heal",
+                value: "3d6+8",
+                price: 200,
+                rarity: "uncommon",
+                description: "Runa de Ultimate Healing. Cura uma grande quantidade de vida."
+            },
+            "Runa IH": {
+                type: "rune",
+                effect: "heal",
+                value: "6d6+15",
+                price: 500,
+                rarity: "rare",
+                description: "Runa de Intense Healing. Cura uma quantidade enorme de vida."
+            },
+            "Runa SD": {
+                type: "rune",
+                effect: "damage",
+                value: "8d8",
+                price: 600,
+                rarity: "rare",
+                description: "Runa de Sudden Death. Causa dano mágico massivo."
+            },
+            "Runa HMM": {
+                type: "rune",
+                effect: "damage",
+                value: "5d6",
+                price: 350,
+                rarity: "uncommon",
+                description: "Runa de Heavy Magic Missile. Causa dano mágico considerável."
+            },
+            "Chave de Ankh": {
+                type: "key",
+                price: 0,
+                rarity: "rare",
+                description: "Chave para a Banshee Quest."
+            },
+            "Estatueta de Demônio": {
+                type: "quest",
+                price: 0,
+                rarity: "rare",
+                description: "Item necessário para a Demon Helmet Quest."
+            },
+            "Elmo Dourado": {
+                type: "armor",
+                armor: 3,
+                price: 2000,
+                rarity: "rare",
+                description: "Recompensa da Golden Helmet Quest."
+            },
+            "Elmo Alado": {
+                type: "armor",
+                armor: 4,
+                price: 5000,
+                rarity: "epic",
+                description: "Recompensa da Winged Helmet Quest."
+            },
+            "Elmo do Demônio": {
+                type: "armor",
+                armor: 5,
+                price: 8000,
+                rarity: "epic",
+                description: "Recompensa da Demon Helmet Quest."
+            },
+            "Pernas do Demônio": {
+                type: "armor",
+                armor: 6,
+                price: 10000,
+                rarity: "legendary",
+                description: "Recompensa da Demon Legs Quest."
+            }
+        };
+        
+        // Quests data
+        const questsData = {
+            ratazana: {
+                name: "Problema com Ratazanas",
+                description: "O mercador está tendo problemas com ratazanas em seu depósito. Ele oferece 50 de ouro por cada 5 caudas de ratazana.",
+                objective: "Coletar 5 caudas de ratazana",
+                reward: 50,
+                requiredItem: "Cauda de Ratazana",
+                requiredCount: 5,
+                completed: false,
+                repeatable: true
+            },
+            banshee: {
+                name: "Banshee Quest",
+                description: "Um antigo cemitério está assombrado por uma banshee. Derrote-a para obter a Chave de Ankh e acessar tesouros ocultos.",
+                objective: "Derrotar a Banshee e obter a Chave de Ankh",
+                reward: "Acesso à tumba secreta e itens valiosos",
+                requiredKill: "Banshee",
+                completed: false,
+                repeatable: false
+            },
+            anihilator: {
+                name: "Anihilator Quest",
+                description: "Desafie o poderoso Anihilator em uma arena mortal para provar seu valor e obter recompensas lendárias.",
+                objective: "Sobreviver ao desafio do Anihilator",
+                reward: "Título de Anihilator e itens poderosos",
+                requiredLevel: 50,
+                completed: false,
+                repeatable: false
+            },
+            demon_helmet: {
+                name: "Demon Helmet Quest",
+                description: "Colete a Estatueta de Demônio e derrote o Demônio Ancião para obter o poderoso Elmo do Demônio.",
+                objective: "Obter a Estatueta de Demônio e derrotar o Demônio Ancião",
+                reward: "Elmo do Demônio",
+                requiredItem: "Estatueta de Demônio",
+                requiredKill: "Demônio Ancião",
+                completed: false,
+                repeatable: false
+            },
+            golden_helmet: {
+                name: "Golden Helmet Quest",
+                description: "Resolva os enigmas da antiga tumba para obter o cobiçado Elmo Dourado.",
+                objective: "Resolver os enigmas da tumba",
+                reward: "Elmo Dourado",
+                completed: false,
+                repeatable: false
+            },
+            winged_helmet: {
+                name: "Winged Helmet Quest",
+                description: "Encontre as asas perdidas do antigo deus alado e forje o Elmo Alado.",
+                objective: "Encontrar as asas perdidas e forjar o elmo",
+                reward: "Elmo Alado",
+                completed: false,
+                repeatable: false
+            },
+            demon_legs: {
+                name: "Demon Legs Quest",
+                description: "Derrote os quatro demônios guardiões e forje as Pernas do Demônio com suas almas.",
+                objective: "Derrotar os quatro demônios guardiões",
+                reward: "Pernas do Demônio",
+                completed: false,
+                repeatable: false
+            }
         };
         
         // Enemies data
@@ -633,31 +1150,64 @@
                 ],
                 exp: 25,
                 gold: "1d6",
-                loot: ["Pele de Ratazana", "Dente de Ratazana"]
+                loot: ["Cauda de Ratazana", "Pele de Ratazana", "Dente de Ratazana"]
             },
-            // More enemies can be added here
-        };
-        
-        // Quests data
-        const quests = {
-            ratazana: {
-                name: "Problema com Ratazanas",
-                description: "O mercador está tendo problemas com ratazanas em seu depósito. Ele oferece 50 de ouro por cada 5 caudas de ratazana.",
-                objective: "Coletar 5 caudas de ratazana",
-                reward: 50,
-                requiredItem: "Cauda de Ratazana",
-                requiredCount: 5,
-                completed: false
+            banshee: {
+                name: "Banshee",
+                description: "Um espírito feminino maligno cujo grito pode matar um homem.",
+                stats: {
+                    str: 8,
+                    dex: 16,
+                    con: 12,
+                    health: 80,
+                    armor: 3
+                },
+                attacks: [
+                    { name: "Grito da Morte", damage: "2d8" },
+                    { name: "Toque Fantasma", damage: "1d10+3" }
+                ],
+                exp: 500,
+                gold: "5d20",
+                loot: ["Chave de Ankh", "Poção de Mana (2)"],
+                quest: "banshee"
             },
-            entrega: {
-                name: "Entrega Especial",
-                description: "O bardo precisa que você entregue uma carta para sua amada na vila ao norte.",
-                objective: "Entregar a carta para a amada do bardo",
-                reward: 30,
-                requiredItem: "Carta do Bardo",
-                requiredCount: 1,
-                targetLocation: "north_village",
-                completed: false
+            demon: {
+                name: "Demônio Ancião",
+                description: "Um poderoso demônio que guarda segredos antigos.",
+                stats: {
+                    str: 20,
+                    dex: 12,
+                    con: 18,
+                    health: 200,
+                    armor: 8
+                },
+                attacks: [
+                    { name: "Garra Demoníaca", damage: "2d10+5" },
+                    { name: "Sopro de Fogo", damage: "3d6" }
+                ],
+                exp: 2000,
+                gold: "10d50",
+                loot: ["Elmo do Demônio"],
+                quest: "demon_helmet"
+            },
+            anihilator: {
+                name: "Anihilator",
+                description: "O guerreiro mais mortal de todos os tempos.",
+                stats: {
+                    str: 25,
+                    dex: 18,
+                    con: 20,
+                    health: 300,
+                    armor: 10
+                },
+                attacks: [
+                    { name: "Golpe Aniquilador", damage: "3d12+8" },
+                    { name: "Investida Mortal", damage: "2d20+5" }
+                ],
+                exp: 5000,
+                gold: "20d100",
+                loot: ["Título de Anihilator", "Poção de Cura (5)"],
+                quest: "anihilator"
             }
         };
         
@@ -680,13 +1230,122 @@
                     { text: "Voltar para a estalagem", next: "start" }
                 ]
             },
+            market: {
+                text: "O mercado de Thais é um lugar movimentado, com barracas vendendo de tudo, desde comida até equipamentos de aventura. Você vê um mercador de armas, um vendedor de poções e um comerciante de equipamentos gerais.",
+                options: [
+                    { text: "Falar com o mercador de armas", next: "weapon_merchant" },
+                    { text: "Falar com o vendedor de poções", next: "potion_merchant" },
+                    { text: "Falar com o comerciante geral", next: "general_merchant" },
+                    { text: "Voltar para a praça", next: "explore_city" }
+                ]
+            },
+            weapon_merchant: {
+                text: `<div class="npc-dialog">"Olá, aventureiro! Está precisando de armas novas? Tenho algumas das melhores da cidade!"</div>`,
+                options: [
+                    { text: "Comprar armas", action: "openWeaponShop" },
+                    { text: "Vender itens", action: "sellItems" },
+                    { text: "Perguntar sobre quests", next: "weapon_merchant_quests" },
+                    { text: "Voltar ao mercado", next: "market" }
+                ]
+            },
+            weapon_merchant_quests: {
+                text: `<div class="npc-dialog">"Ah, sim! Estou tendo problemas com ratazanas no meu depósito. Se você puder me trazer 5 caudas de ratazana, eu te pago 50 de ouro. O que acha?"</div>`,
+                options: [
+                    { text: "Aceitar a quest", action: "acceptQuest:ratazana" },
+                    { text: "Recusar", next: "weapon_merchant" },
+                    { text: "Perguntar onde encontrar ratazanas", next: "where_rats" }
+                ]
+            },
+            where_rats: {
+                text: `<div class="npc-dialog">"As ratazanas estão em todo lugar nos esgotos e áreas abandonadas. Se você sair pelo portão norte da cidade, vai encontrar algumas perto das ruínas antigas."</div>`,
+                options: [
+                    { text: "Aceitar a quest", action: "acceptQuest:ratazana" },
+                    { text: "Voltar", next: "weapon_merchant" }
+                ]
+            },
             // More story segments can be added here
         };
+        
+        // Initialize the game
+        function initGame() {
+            // Setup shop inventory
+            gameState.shopInventory = [
+                { name: "Espada Longa", price: 150, stock: 5 },
+                { name: "Arco Curto", price: 120, stock: 3 },
+                { name: "Armadura de Couro", price: 80, stock: 4 },
+                { name: "Escudo de Madeira", price: 70, stock: 3 },
+                { name: "Flechas (20)", price: 10, stock: 10 }
+            ];
+            
+            // Setup rune shop inventory
+            gameState.runeShopInventory = [
+                { name: "Runa UH", price: 200, stock: 5 },
+                { name: "Runa IH", price: 500, stock: 3 },
+                { name: "Runa SD", price: 600, stock: 2 },
+                { name: "Runa HMM", price: 350, stock: 4 }
+            ];
+            
+            // Initialize quest data
+            gameState.questData = JSON.parse(JSON.stringify(questsData));
+            
+            // Add context menu event listeners
+            document.addEventListener('click', function() {
+                document.getElementById('context-menu').style.display = 'none';
+            });
+            
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                const contextMenu = document.getElementById('context-menu');
+                contextMenu.style.display = 'none';
+                
+                // Check if right-click was on an inventory item
+                const inventoryItem = e.target.closest('.inventory-item');
+                if (inventoryItem) {
+                    const itemName = inventoryItem.textContent;
+                    showContextMenu(e, itemName);
+                }
+            });
+        }
+        
+        // Show context menu for inventory items
+        function showContextMenu(e, itemName) {
+            const contextMenu = document.getElementById('context-menu');
+            contextMenu.innerHTML = '';
+            
+            // Add use option
+            const useOption = document.createElement('div');
+            useOption.className = 'context-menu-item';
+            useOption.textContent = 'Usar';
+            useOption.onclick = function() { useItem(itemName); };
+            contextMenu.appendChild(useOption);
+            
+            // Add drop option
+            const dropOption = document.createElement('div');
+            dropOption.className = 'context-menu-item';
+            dropOption.textContent = 'Largar';
+            dropOption.onclick = function() { dropItem(itemName); };
+            contextMenu.appendChild(dropOption);
+            
+            // Add sell option if in shop
+            if (document.getElementById('shop-container').style.display === 'block') {
+                const sellOption = document.createElement('div');
+                sellOption.className = 'context-menu-item';
+                sellOption.textContent = 'Vender';
+                sellOption.onclick = function() { sellItem(itemName); };
+                contextMenu.appendChild(sellOption);
+            }
+            
+            // Position the menu
+            contextMenu.style.display = 'block';
+            contextMenu.style.left = `${e.pageX}px`;
+            contextMenu.style.top = `${e.pageY}px`;
+        }
         
         // Game functions
         function startNewGame() {
             document.getElementById("main-menu").style.display = "none";
             document.getElementById("character-creation").style.display = "block";
+            initGame();
         }
         
         function loadGame() {
@@ -704,7 +1363,7 @@
             `;
             
             const optionsContainer = document.getElementById("options-container");
-            optionsContainer.innerHTML = "";
+            optionsContainer.innerHTML = '';
             
             const backBtn = document.createElement("button");
             backBtn.className = "option-btn";
@@ -738,6 +1397,11 @@
             // Add starting items
             gameState.player.inventory = [...classData.startingItems];
             
+            // Add known spells if any
+            if (classData.knownSpells) {
+                gameState.player.knownSpells = [...classData.knownSpells];
+            }
+            
             // Show confirmation
             document.getElementById("story-text").innerHTML = `
                 <h3>Você escolheu ser um ${classData.name}</h3>
@@ -753,7 +1417,7 @@
             `;
             
             const optionsContainer = document.getElementById("options-container");
-            optionsContainer.innerHTML = "";
+            optionsContainer.innerHTML = '';
             
             const confirmBtn = document.createElement("button");
             confirmBtn.className = "option-btn";
@@ -778,7 +1442,7 @@
         
         function showClassSelection() {
             const optionsContainer = document.getElementById("options-container");
-            optionsContainer.innerHTML = "";
+            optionsContainer.innerHTML = '';
             
             const classSelectionDiv = document.getElementById("class-selection");
             classSelectionDiv.style.display = "flex";
@@ -819,17 +1483,33 @@
             }
             
             document.getElementById("story-text").innerHTML = segment.text;
+            gameState.currentStory = segmentId;
             
             const optionsContainer = document.getElementById("options-container");
-            optionsContainer.innerHTML = "";
+            optionsContainer.innerHTML = '';
             
             segment.options.forEach(option => {
                 const btn = document.createElement("button");
                 btn.className = "option-btn";
                 btn.textContent = option.text;
-                btn.onclick = function() {
-                    loadStorySegment(option.next);
-                };
+                
+                if (option.action) {
+                    const [action, param] = option.action.split(":");
+                    btn.onclick = function() {
+                        if (action === "openWeaponShop") {
+                            openWeaponShop();
+                        } else if (action === "sellItems") {
+                            toggleShop(true);
+                        } else if (action === "acceptQuest") {
+                            acceptQuest(param);
+                        }
+                    };
+                } else {
+                    btn.onclick = function() {
+                        loadStorySegment(option.next);
+                    };
+                }
+                
                 optionsContainer.appendChild(btn);
             });
             
@@ -840,37 +1520,10 @@
         function addStandardOptions() {
             const optionsContainer = document.getElementById("options-container");
             
-            const charBtn = document.createElement("button");
-            charBtn.className = "option-btn";
-            charBtn.textContent = "Ver Status do Personagem";
-            charBtn.onclick = function() {
-                toggleCharacterSheet();
-            };
-            optionsContainer.appendChild(charBtn);
-            
-            const invBtn = document.createElement("button");
-            invBtn.className = "option-btn";
-            invBtn.textContent = "Ver Inventário";
-            invBtn.onclick = function() {
-                toggleInventory();
-            };
-            optionsContainer.appendChild(invBtn);
-            
-            const skillsBtn = document.createElement("button");
-            skillsBtn.className = "option-btn";
-            skillsBtn.textContent = "Ver Habilidades";
-            skillsBtn.onclick = function() {
-                toggleSkills();
-            };
-            optionsContainer.appendChild(skillsBtn);
-            
-            const mapBtn = document.createElement("button");
-            mapBtn.className = "option-btn";
-            mapBtn.textContent = "Ver Mapa";
-            mapBtn.onclick = function() {
-                toggleMap();
-            };
-            optionsContainer.appendChild(mapBtn);
+            // Don't add duplicate buttons
+            if (document.querySelector('.option-btn[onclick="toggleCharacterSheet()"]')) {
+                return;
+            }
         }
         
         function toggleCharacterSheet() {
@@ -881,27 +1534,46 @@
             document.getElementById("inventory").style.display = "none";
             document.getElementById("skills-container").style.display = "none";
             document.getElementById("map-container").style.display = "none";
+            document.getElementById("shop-container").style.display = "none";
+            document.getElementById("quest-log").style.display = "none";
+            
+            if (charSheet.style.display === "block") {
+                updateCharacterSheet();
+            }
         }
         
-        function toggleInventory() {
+        function toggleInventory(showSellButton = false) {
             const inventory = document.getElementById("inventory");
             inventory.style.display = inventory.style.display === "none" ? "block" : "none";
             
             // Update inventory display
             if (inventory.style.display === "block") {
                 const itemsContainer = document.getElementById("inventory-items");
-                itemsContainer.innerHTML = "";
+                itemsContainer.innerHTML = '';
                 
                 if (gameState.player.inventory.length === 0) {
                     itemsContainer.innerHTML = "<p>Seu inventário está vazio.</p>";
                 } else {
+                    // Group identical items
+                    const itemCounts = {};
                     gameState.player.inventory.forEach(item => {
+                        itemCounts[item] = (itemCounts[item] || 0) + 1;
+                    });
+                    
+                    Object.keys(itemCounts).forEach(itemName => {
+                        const count = itemCounts[itemName];
                         const itemDiv = document.createElement("div");
-                        itemDiv.className = "inventory-item";
-                        itemDiv.textContent = item;
+                        itemDiv.className = `inventory-item ${items[itemName]?.rarity || ''}`;
+                        itemDiv.textContent = count > 1 ? `${itemName} (${count})` : itemName;
                         itemDiv.onclick = function() {
-                            useItem(item);
+                            useItem(itemName);
                         };
+                        
+                        // Add tooltip with item description
+                        if (items[itemName]) {
+                            itemDiv.setAttribute('data-tooltip', items[itemName].description);
+                        }
+                        
                         itemsContainer.appendChild(itemDiv);
                     });
                 }
@@ -911,6 +1583,8 @@
             document.getElementById("character-sheet").style.display = "none";
             document.getElementById("skills-container").style.display = "none";
             document.getElementById("map-container").style.display = "none";
+            document.getElementById("shop-container").style.display = "none";
+            document.getElementById("quest-log").style.display = "none";
         }
         
         function toggleSkills() {
@@ -920,7 +1594,7 @@
             // Update skills display
             if (skillsContainer.style.display === "block") {
                 const skillsList = document.getElementById("skills-list");
-                skillsList.innerHTML = "";
+                skillsList.innerHTML = '';
                 
                 gameState.player.skills.forEach(skill => {
                     const skillDiv = document.createElement("div");
@@ -944,6 +1618,10 @@
                         descSpan.textContent += ` (Custo: ${skill.cost} de mana)`;
                     }
                     
+                    if (skill.cooldown) {
+                        descSpan.textContent += ` (Recarga: ${skill.cooldown} turnos)`;
+                    }
+                    
                     skillDiv.appendChild(descSpan);
                     skillsList.appendChild(skillDiv);
                 });
@@ -953,6 +1631,8 @@
             document.getElementById("character-sheet").style.display = "none";
             document.getElementById("inventory").style.display = "none";
             document.getElementById("map-container").style.display = "none";
+            document.getElementById("shop-container").style.display = "none";
+            document.getElementById("quest-log").style.display = "none";
         }
         
         function toggleMap() {
@@ -976,11 +1656,145 @@
             document.getElementById("character-sheet").style.display = "none";
             document.getElementById("inventory").style.display = "none";
             document.getElementById("skills-container").style.display = "none";
+            document.getElementById("shop-container").style.display = "none";
+            document.getElementById("quest-log").style.display = "none";
+        }
+        
+        function toggleShop(showSell = false) {
+            const shopContainer = document.getElementById("shop-container");
+            const inventory = document.getElementById("inventory");
+            
+            if (showSell || shopContainer.style.display === "block") {
+                shopContainer.style.display = "none";
+                inventory.style.display = "block";
+                toggleInventory();
+            } else {
+                shopContainer.style.display = "block";
+                inventory.style.display = "none";
+                
+                // Update shop display
+                const shopItemsDiv = document.getElementById("shop-items");
+                shopItemsDiv.innerHTML = '';
+                
+                gameState.shopInventory.forEach(shopItem => {
+                    const item = items[shopItem.name];
+                    if (!item) return;
+                    
+                    const itemDiv = document.createElement("div");
+                    itemDiv.className = "shop-item";
+                    
+                    const nameSpan = document.createElement("span");
+                    nameSpan.className = "shop-item-name";
+                    nameSpan.textContent = shopItem.name;
+                    itemDiv.appendChild(nameSpan);
+                    
+                    const priceSpan = document.createElement("span");
+                    priceSpan.className = "shop-item-price";
+                    priceSpan.textContent = `${shopItem.price} de ouro`;
+                    itemDiv.appendChild(priceSpan);
+                    
+                    const buyBtn = document.createElement("button");
+                    buyBtn.className = "buy-btn";
+                    buyBtn.textContent = "Comprar";
+                    buyBtn.onclick = function() { buyItem(shopItem.name, shopItem.price); };
+                    itemDiv.appendChild(buyBtn);
+                    
+                    shopItemsDiv.appendChild(itemDiv);
+                });
+            }
+            
+            // Hide other panels
+            document.getElementById("character-sheet").style.display = "none";
+            document.getElementById("skills-container").style.display = "none";
+            document.getElementById("map-container").style.display = "none";
+            document.getElementById("quest-log").style.display = "none";
+        }
+        
+        function toggleQuestLog() {
+            const questLog = document.getElementById("quest-log");
+            questLog.style.display = questLog.style.display === "none" ? "block" : "none";
+            
+            // Update quest log display
+            if (questLog.style.display === "block") {
+                const questsList = document.getElementById("quests-list");
+                questsList.innerHTML = '';
+                
+                if (gameState.player.quests.length === 0 && gameState.player.completedQuests.length === 0) {
+                    questsList.innerHTML = "<p>Você não tem missões ativas.</p>";
+                } else {
+                    // Active quests
+                    if (gameState.player.quests.length > 0) {
+                        const activeHeader = document.createElement("h4");
+                        activeHeader.textContent = "Missões Ativas";
+                        questsList.appendChild(activeHeader);
+                        
+                        gameState.player.quests.forEach(questId => {
+                            const quest = gameState.questData[questId];
+                            if (!quest) return;
+                            
+                            const questDiv = document.createElement("div");
+                            questDiv.className = "quest-entry";
+                            
+                            const titleDiv = document.createElement("div");
+                            titleDiv.className = "quest-title";
+                            titleDiv.textContent = quest.name;
+                            questDiv.appendChild(titleDiv);
+                            
+                            const descDiv = document.createElement("div");
+                            descDiv.textContent = quest.description;
+                            questDiv.appendChild(descDiv);
+                            
+                            const objDiv = document.createElement("div");
+                            objDiv.textContent = `Objetivo: ${quest.objective}`;
+                            questDiv.appendChild(objDiv);
+                            
+                            const rewardDiv = document.createElement("div");
+                            rewardDiv.textContent = `Recompensa: ${typeof quest.reward === 'number' ? `${quest.reward} de ouro` : quest.reward}`;
+                            questDiv.appendChild(rewardDiv);
+                            
+                            questsList.appendChild(questDiv);
+                        });
+                    }
+                    
+                    // Completed quests
+                    if (gameState.player.completedQuests.length > 0) {
+                        const completedHeader = document.createElement("h4");
+                        completedHeader.textContent = "Missões Completas";
+                        questsList.appendChild(completedHeader);
+                        
+                        gameState.player.completedQuests.forEach(questId => {
+                            const quest = gameState.questData[questId];
+                            if (!quest) return;
+                            
+                            const questDiv = document.createElement("div");
+                            questDiv.className = "quest-entry";
+                            
+                            const titleDiv = document.createElement("div");
+                            titleDiv.className = "quest-title quest-completed";
+                            titleDiv.textContent = quest.name + " (Completa)";
+                            questDiv.appendChild(titleDiv);
+                            
+                            const descDiv = document.createElement("div");
+                            descDiv.textContent = quest.description;
+                            questDiv.appendChild(descDiv);
+                            
+                            questsList.appendChild(questDiv);
+                        });
+                    }
+                }
+            }
+            
+            // Hide other panels
+            document.getElementById("character-sheet").style.display = "none";
+            document.getElementById("inventory").style.display = "none";
+            document.getElementById("skills-container").style.display = "none";
+            document.getElementById("map-container").style.display = "none";
+            document.getElementById("shop-container").style.display = "none";
         }
         
         function updateCharacterSheet() {
             document.getElementById("char-name").textContent = gameState.player.name;
-            document.getElementById("char-class").textContent = classes[gameState.player.class].name;
+            document.getElementById("char-class").textContent = classes[gameState.player.class]?.name || '-';
             document.getElementById("char-level").textContent = gameState.player.level;
             document.getElementById("char-exp").textContent = `${gameState.player.exp}/${gameState.player.nextLevelExp}`;
             document.getElementById("char-health").textContent = `${gameState.player.health}/${gameState.player.maxHealth}`;
@@ -993,4 +1807,244 @@
             document.getElementById("char-con").textContent = gameState.player.con;
             
             // Update health bar
-            const healthPercent = (gameState.player.health / gameState.player.maxHealth)
+            const healthPercent = (gameState.player.health / gameState.player.maxHealth) * 100;
+            document.getElementById("health-bar").style.width = `${healthPercent}%`;
+            
+            // Update mana bar
+            const manaPercent = (gameState.player.mana / gameState.player.maxMana) * 100;
+            document.getElementById("mana-bar").style.width = `${manaPercent}%`;
+        }
+        
+        function useItem(itemName) {
+            const item = items[itemName];
+            if (!item) {
+                addToCombatLog(`Item "${itemName}" não encontrado.`, "neutral");
+                return;
+            }
+            
+            if (item.type === "consumable") {
+                if (item.effect === "heal") {
+                    const healAmount = rollDice(item.value);
+                    gameState.player.health = Math.min(gameState.player.health + healAmount, gameState.player.maxHealth);
+                    addToCombatLog(`Você usou ${itemName} e recuperou ${healAmount} pontos de vida.`, "player-turn");
+                    
+                    // Remove item from inventory
+                    removeFromInventory(itemName);
+                } else if (item.effect === "restore mana") {
+                    const manaAmount = rollDice(item.value);
+                    gameState.player.mana = Math.min(gameState.player.mana + manaAmount, gameState.player.maxMana);
+                    addToCombatLog(`Você usou ${itemName} e recuperou ${manaAmount} pontos de mana.`, "player-turn");
+                    
+                    // Remove item from inventory
+                    removeFromInventory(itemName);
+                }
+                
+                updateCharacterSheet();
+            } else {
+                addToCombatLog(`Você não pode usar ${itemName} diretamente.`, "neutral");
+            }
+        }
+        
+        function dropItem(itemName) {
+            const index = gameState.player.inventory.indexOf(itemName);
+            if (index !== -1) {
+                gameState.player.inventory.splice(index, 1);
+                addToCombatLog(`Você largou ${itemName}.`, "neutral");
+                toggleInventory();
+            }
+        }
+        
+        function sellItem(itemName) {
+            const item = items[itemName];
+            if (!item || !item.price) {
+                addToCombatLog(`Você não pode vender ${itemName}.`, "neutral");
+                return;
+            }
+            
+            const sellPrice = Math.floor(item.price * 0.7); // 70% of original price
+            const index = gameState.player.inventory.indexOf(itemName);
+            if (index !== -1) {
+                gameState.player.inventory.splice(index, 1);
+                gameState.player.gold += sellPrice;
+                addToCombatLog(`Você vendeu ${itemName} por ${sellPrice} de ouro.`, "neutral");
+                updateCharacterSheet();
+                toggleInventory();
+            }
+        }
+        
+        function buyItem(itemName, price) {
+            if (gameState.player.gold < price) {
+                addToCombatLog("Você não tem ouro suficiente para comprar isso.", "neutral");
+                return;
+            }
+            
+            gameState.player.gold -= price;
+            gameState.player.inventory.push(itemName);
+            addToCombatLog(`Você comprou ${itemName} por ${price} de ouro.`, "neutral");
+            updateCharacterSheet();
+            toggleShop();
+            toggleInventory();
+        }
+        
+        function removeFromInventory(itemName) {
+            const index = gameState.player.inventory.indexOf(itemName);
+            if (index !== -1) {
+                gameState.player.inventory.splice(index, 1);
+                toggleInventory();
+            }
+        }
+        
+        function openWeaponShop() {
+            toggleShop();
+        }
+        
+        function acceptQuest(questId) {
+            if (!gameState.player.quests.includes(questId)) {
+                gameState.player.quests.push(questId);
+                addToCombatLog(`Missão aceita: ${gameState.questData[questId].name}`, "neutral");
+                loadStorySegment("weapon_merchant");
+            }
+        }
+        
+        function completeQuest(questId) {
+            const quest = gameState.questData[questId];
+            if (!quest) return;
+            
+            // Remove from active quests
+            const questIndex = gameState.player.quests.indexOf(questId);
+            if (questIndex !== -1) {
+                gameState.player.quests.splice(questIndex, 1);
+            }
+            
+            // Add to completed quests if not repeatable
+            if (!quest.repeatable && !gameState.player.completedQuests.includes(questId)) {
+                gameState.player.completedQuests.push(questId);
+            }
+            
+            // Give reward
+            if (typeof quest.reward === 'number') {
+                gameState.player.gold += quest.reward;
+                addToCombatLog(`Missão completada! Você recebeu ${quest.reward} de ouro.`, "neutral");
+            } else if (quest.reward) {
+                // Handle item rewards
+                gameState.player.inventory.push(quest.reward);
+                addToCombatLog(`Missão completada! Você recebeu ${quest.reward}.`, "neutral");
+            }
+            
+            quest.completed = true;
+            updateCharacterSheet();
+        }
+        
+        function addToCombatLog(message, type = "neutral") {
+            const combatLog = document.getElementById("combat-log");
+            const entry = document.createElement("div");
+            entry.className = `combat-entry ${type}`;
+            entry.textContent = message;
+            combatLog.appendChild(entry);
+            
+            // Scroll to bottom
+            combatLog.scrollTop = combatLog.scrollHeight;
+        }
+        
+        function rollDice(diceNotation) {
+            const parts = diceNotation.split(/[+-]/);
+            let total = 0;
+            
+            for (let part of parts) {
+                if (part.includes('d')) {
+                    const [numDice, numSides] = part.split('d').map(Number);
+                    for (let i = 0; i < numDice; i++) {
+                        total += Math.floor(Math.random() * numSides) + 1;
+                    }
+                } else if (!isNaN(part)) {
+                    total += parseInt(part);
+                }
+            }
+            
+            // Handle modifiers
+            if (diceNotation.includes('+')) {
+                const modifier = parseInt(diceNotation.split('+')[1]);
+                if (!isNaN(modifier)) total += modifier;
+            } else if (diceNotation.includes('-')) {
+                const modifier = parseInt(diceNotation.split('-')[1]);
+                if (!isNaN(modifier)) total -= modifier;
+            }
+            
+            return total;
+        }
+        
+        function showDiceRoll(reason) {
+            document.getElementById("dice-reason").textContent = reason;
+            document.getElementById("dice-result").textContent = "Rolando...";
+            document.getElementById("dice-roll").style.display = "block";
+            
+            // Animate dice roll
+            let rolls = 0;
+            const maxRolls = 5;
+            const interval = setInterval(() => {
+                const randomNum = Math.floor(Math.random() * 20) + 1;
+                document.getElementById("dice-result").textContent = randomNum;
+                rolls++;
+                
+                if (rolls >= maxRolls) {
+                    clearInterval(interval);
+                    const finalResult = Math.floor(Math.random() * 20) + 1;
+                    document.getElementById("dice-result").textContent = finalResult;
+                    return finalResult;
+                }
+            }, 100);
+        }
+        
+        function closeDiceRoll() {
+            document.getElementById("dice-roll").style.display = "none";
+        }
+        
+        function gameOver() {
+            document.getElementById("game-over").style.display = "flex";
+            document.getElementById("game-over-text").textContent = `Sua jornada chegou ao fim, ${gameState.player.name}. Você alcançou o nível ${gameState.player.level} e completou ${gameState.player.completedQuests.length} missões.`;
+            gameState.gameOver = true;
+        }
+        
+        function restartGame() {
+            document.getElementById("game-over").style.display = "none";
+            document.getElementById("game-ui").style.display = "none";
+            document.getElementById("main-menu").style.display = "block";
+            
+            // Reset game state
+            gameState.player = {
+                name: "",
+                class: "",
+                level: 1,
+                exp: 0,
+                nextLevelExp: 100,
+                health: 0,
+                maxHealth: 0,
+                mana: 0,
+                maxMana: 0,
+                str: 0,
+                dex: 0,
+                int: 0,
+                con: 0,
+                gold: 0,
+                inventory: [],
+                skills: [],
+                knownSpells: [],
+                currentLocation: "thais",
+                quests: [],
+                kills: {},
+                completedQuests: []
+            };
+            
+            gameState.currentEnemy = null;
+            gameState.currentStory = "start";
+            gameState.combatActive = false;
+            gameState.gameOver = false;
+        }
+        
+        // Initialize the game when the page loads
+        window.onload = function() {
+            initGame();
+        };
+    </script>
+</body>
+</html>
