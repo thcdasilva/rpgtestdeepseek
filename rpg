@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPG Tibia Dark Souls</title>
+    <style>
+        :root {
+            --dark-bg: #0a0a0a;
+            --darker-bg: #050505;
+            --text-color: #e0e0e0;
+            --gold: #d4af37;
+            --red: #8b0000;
+            --blue: #1e90ff;
+            --green: #228b22;
+        }
+        
+        body {
+            font-family: 'Times New Roman', serif;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            background-image: url('https://i.imgur.com/JjQZQ9q.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            line-height: 1.6;
+        }
+        
+        #game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(10, 10, 10, 0.9);
+            border: 1px solid var(--gold);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+            min-height: 100vh;
+        }
+        
+        h1, h2, h3 {
+            color: var(--gold);
+            text-align: center;
+            text-shadow: 2px 2px 4px #000;
+            border-bottom: 1px solid var(--gold);
+            padding-bottom: 10px;
+        }
+        
+        #story-text {
+            background-color: rgba(5, 5, 5, 0.7);
+            padding: 15px;
+            border: 1px solid #333;
+            margin-bottom: 20px;
+            min-height: 150px;
+            font-size: 18px;
+        }
+        
+        #options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .option-btn {
+            background-color: var(--darker-bg);
+            color: var(--text-color);
+            border: 1px solid #333;
+            padding: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            text-align: left;
+        }
+        
+        .option-btn:hover {
+            background-color: #1a1a1a;
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+        
+        #character-sheet {
+            background-color: rgba(5, 5, 5, 0.7);
+            padding: 15px;
+            border: 1px solid #333;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .stat {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .stat-name {
+            font-weight: bold;
+            color: var(--gold);
+        }
+        
+        .health-bar, .mana-bar {
+            height: 20px;
+            background-color: #333;
+            margin: 5px 0;
+            position: relative;
+        }
+        
+        .health-fill {
+            height: 100%;
+            background-color: var(--red);
+            width: 100%;
+            transition: width 0.5s;
+        }
+        
+        .mana-fill {
+            height: 100%;
+            background-color: var(--blue);
+            width: 100%;
+            transition: width 0.5s;
+        }
+        
+        #inventory {
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .inventory-item {
+            display: inline-block;
+            margin: 5px;
+            padding: 5px;
+            border: 1px solid #333;
+            cursor: pointer;
+        }
+        
+        #dice-roll {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--darker-bg);
+            border: 2px solid var(--gold);
+            padding: 20px;
+            z-index: 100;
+            display: none;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.9);
+        }
+        
+        #dice-result {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--gold);
+            margin: 10px 0;
+        }
+        
+        #combat-log {
+            max-height: 150px;
+            overflow-y: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #333;
+        }
+        
+        .combat-entry {
+            margin-bottom: 5px;
+        }
+        
+        .player-turn {
+            color: var(--blue);
+        }
+        
+        .enemy-turn {
+            color: var(--red);
+        }
+        
+        .neutral {
+            color: var(--text-color);
+        }
+        
+        #class-selection {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .class-card {
+            width: 150px;
+            padding: 15px;
+            background-color: rgba(5, 5, 5, 0.8);
+            border: 1px solid #333;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .class-card:hover {
+            border-color: var(--gold);
+            transform: scale(1.05);
+        }
+        
+        .class-card img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+        
+        .knight { border-color: #8B0000; }
+        .knight:hover { border-color: #FF0000; }
+        
+        .archer { border-color: #228B22; }
+        .archer:hover { border-color: #32CD32; }
+        
+        .sorcerer { border-color: #4B0082; }
+        .sorcerer:hover { border-color: #9370DB; }
+        
+        .druid { border-color: #1E90FF; }
+        .druid:hover { border-color: #87CEFA; }
+        
+        #game-title {
+            font-size: 36px;
+            margin-bottom: 30px;
+            letter-spacing: 3px;
+        }
+        
+        #game-subtitle {
+            font-style: italic;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #aaa;
+        }
+        
+        #location-display {
+            font-style: italic;
+            color: var(--gold);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        #game-over {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            display: none;
+        }
+        
+        #game-over h2 {
+            color: var(--red);
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        #restart-btn {
+            padding: 15px 30px;
+            background-color: var(--darker-bg);
+            color: var(--text-color);
+            border: 1px solid var(--red);
+            font-size: 18px;
+            cursor: pointer;
+        }
+        
+        #restart-btn:hover {
+            background-color: var(--red);
+            color: white;
+        }
+        
+        #game-ui {
+            display: none;
+        }
+        
+        #character-creation {
+            display: none;
+        }
+        
+        #name-input {
+            background-color: var(--darker-bg);
+            color: var(--text-color);
+            border: 1px solid #333;
+            padding: 10px;
+            width: 100%;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        
+        #confirm-name {
+            padding: 10px 20px;
+            background-color: var(--darker-bg);
+            color: var(--text-color);
+            border: 1px solid var(--gold);
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        #confirm-name:hover {
+            background-color: #1a1a1a;
+        }
+        
+        .skill {
+            margin-bottom: 10px;
+        }
+        
+        .skill-name {
+            font-weight: bold;
+            color: var(--gold);
+        }
+        
+        #skills-container {
+            margin-top: 20px;
+            display: none;
+        }
+        
+        #map-container {
+            margin-top: 20px;
+            display: none;
+            text-align: center;
+        }
+        
+        #map {
+            font-family: monospace;
+            white-space: pre;
+            line-height: 1;
+            letter-spacing: 2px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border: 1px solid var(--gold);
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h1 id="game-title">TIBIA: DARK SOULS</h1>
+        <p id="game-subtitle">Uma jornada sombria no mundo de Tibia</p>
+        
+        <div id="main-menu">
+            <h2>Menu Principal</h2>
+            <div id="options-container">
+                <button class="option-btn" onclick="startNewGame()">Novo Jogo</button>
+                <button class="option-btn" onclick="loadGame()">Carregar Jogo</button>
+                <button class="option-btn" onclick="showCredits()">Créditos</button>
+            </div>
+        </div>
+        
+        <div id="character-creation">
+            <h2>Criação de Personagem</h2>
+            <div id="options-container">
+                <label for="name-input">Nome do Herói:</label>
+                <input type="text" id="name-input" placeholder="Digite seu nome">
+                <button id="confirm-name" onclick="confirmName()">Confirmar</button>
+                
+                <h3>Escolha sua Classe</h3>
+                <div id="class-selection">
+                    <div class="class-card knight" onclick="selectClass('knight')">
+                        <img src="https://i.imgur.com/XJQZQ9q.jpg" alt="Knight">
+                        <h4>Cavaleiro</h4>
+                        <p>Força bruta e resistência</p>
+                    </div>
+                    <div class="class-card archer" onclick="selectClass('archer')">
+                        <img src="https://i.imgur.com/YJQZQ9q.jpg" alt="Archer">
+                        <h4>Arqueiro</h4>
+                        <p>Precisão e agilidade</p>
+                    </div>
+                    <div class="class-card sorcerer" onclick="selectClass('sorcerer')">
+                        <img src="https://i.imgur.com/ZJQZQ9q.jpg" alt="Sorcerer">
+                        <h4>Feiticeiro</h4>
+                        <p>Magia arcana destrutiva</p>
+                    </div>
+                    <div class="class-card druid" onclick="selectClass('druid')">
+                        <img src="https://i.imgur.com/WJQZQ9q.jpg" alt="Druid">
+                        <h4>Druida</h4>
+                        <p>Cura e magia natural</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="game-ui">
+            <div id="location-display">Local: Cidade de Thais</div>
+            <div id="story-text">
+                Bem-vindo ao mundo de Tibia, herói. Sua jornada está prestes a começar...
+            </div>
+            
+            <div id="options-container"></div>
+            
+            <div id="character-sheet">
+                <h3>Status do Personagem</h3>
+                <div class="stat">
+                    <span class="stat-name">Nome:</span>
+                    <span id="char-name">-</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-name">Classe:</span>
+                    <span id="char-class">-</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-name">Nível:</span>
+                    <span id="char-level">1</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-name">Experiência:</span>
+                    <span id="char-exp">0</span>
+                </div>
+                
+                <div class="stat">
+                    <span class="stat-name">Vida:</span>
+                    <span id="char-health">-</span>
+                </div>
+                <div class="health-bar">
+                    <div class="health-fill" id="health-bar"></div>
+                </div>
+                
+                <div class="stat">
+                    <span class="stat-name">Mana:</span>
+                    <span id="char-mana">-</span>
+                </div>
+                <div class="mana-bar">
+                    <div class="mana-fill" id="mana-bar"></div>
+                </div>
+                
+                <div class="stat">
+                    <span class="stat-name">Ouro:</span>
+                    <span id="char-gold">0</span>
+                </div>
+                
+                <h4>Atributos</h4>
+                <div class="stat">
+                    <span class="stat-name">Força:</span>
+                    <span id="char-str">-</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-name">Destreza:</span>
+                    <span id="char-dex">-</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-name">Inteligência:</span>
+                    <span id="char-int">-</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-name">Constituição:</span>
+                    <span id="char-con">-</span>
+                </div>
+            </div>
+            
+            <div id="skills-container">
+                <h3>Habilidades</h3>
+                <div id="skills-list"></div>
+            </div>
+            
+            <div id="inventory">
+                <h3>Inventário</h3>
+                <div id="inventory-items"></div>
+            </div>
+            
+            <div id="map-container">
+                <h3>Mapa</h3>
+                <div id="map"></div>
+            </div>
+            
+            <div id="combat-log"></div>
+        </div>
+    </div>
+    
+    <div id="dice-roll">
+        <h3>Rolagem de Dados</h3>
+        <p id="dice-reason">Teste de habilidade</p>
+        <div id="dice-result">?</div>
+        <button onclick="closeDiceRoll()">Continuar</button>
+    </div>
+    
+    <div id="game-over">
+        <h2>FIM DE JOGO</h2>
+        <p id="game-over-text">Sua jornada chegou ao fim...</p>
+        <button id="restart-btn" onclick="restartGame()">Jogar Novamente</button>
+    </div>
+    
+    <script>
+        // Game state
+        const gameState = {
+            player: {
+                name: "",
+                class: "",
+                level: 1,
+                exp: 0,
+                nextLevelExp: 100,
+                health: 0,
+                maxHealth: 0,
+                mana: 0,
+                maxMana: 0,
+                str: 0,
+                dex: 0,
+                int: 0,
+                con: 0,
+                gold: 0,
+                inventory: [],
+                skills: [],
+                knownSpells: [],
+                currentLocation: "thais",
+                quests: [],
+                kills: {}
+            },
+            currentEnemy: null,
+            currentStory: "start",
+            combatActive: false,
+            gameOver: false
+        };
+        
+        // Classes data
+        const classes = {
+            knight: {
+                name: "Cavaleiro",
+                description: "Um guerreiro forte e resistente, especializado em combate corpo a corpo.",
+                stats: {
+                    str: 15,
+                    dex: 10,
+                    int: 5,
+                    con: 14,
+                    health: 30,
+                    mana: 10
+                },
+                skills: [
+                    { name: "Espada Longa", type: "attack", damage: "1d8+str", cost: 0 },
+                    { name: "Escudo", type: "defense", bonus: "+2 AC", cost: 0 },
+                    { name: "Investida", type: "attack", damage: "1d10+str", cost: 5, cooldown: 3 }
+                ],
+                startingItems: ["Espada Longa", "Escudo de Madeira", "Armadura de Couro"]
+            },
+            archer: {
+                name: "Arqueiro",
+                description: "Um atirador preciso e ágil, mortal a distância.",
+                stats: {
+                    str: 8,
+                    dex: 16,
+                    int: 8,
+                    con: 10,
+                    health: 22,
+                    mana: 12
+                },
+                skills: [
+                    { name: "Tiro Rápido", type: "attack", damage: "1d6+dex", cost: 0 },
+                    { name: "Tiro Preciso", type: "attack", damage: "2d4+dex", cost: 5 },
+                    { name: "Flecha Envenenada", type: "attack", damage: "1d6+dex", effect: "veneno", cost: 8, cooldown: 4 }
+                ],
+                startingItems: ["Arco Curto", "Flechas (20)", "Armadura de Couro"]
+            },
+            sorcerer: {
+                name: "Feiticeiro",
+                description: "Um mestre das artes arcanas, capaz de conjurar poderosos feitiços.",
+                stats: {
+                    str: 5,
+                    dex: 8,
+                    int: 16,
+                    con: 8,
+                    health: 18,
+                    mana: 30
+                },
+                skills: [
+                    { name: "Bola de Fogo", type: "spell", damage: "2d6+int", cost: 8 },
+                    { name: "Raio de Gelo", type: "spell", damage: "1d8+int", effect: "slow", cost: 6 },
+                    { name: "Névoa Arcana", type: "spell", effect: "blind", cost: 10, cooldown: 5 }
+                ],
+                startingItems: ["Cajado Arcano", "Poção de Mana (2)", "Túnica do Aprendiz"]
+            },
+            druid: {
+                name: "Druida",
+                description: "Um guardião da natureza, capaz de curar e controlar as forças naturais.",
+                stats: {
+                    str: 6,
+                    dex: 10,
+                    int: 14,
+                    con: 12,
+                    health: 24,
+                    mana: 24
+                },
+                skills: [
+                    { name: "Cura Menor", type: "spell", heal: "1d8+int", cost: 6 },
+                    { name: "Chicote de Vinha", type: "spell", damage: "1d6+int", cost: 4 },
+                    { name: "Armadura de Espinhos", type: "spell", effect: "thorns", cost: 8, duration: 3 }
+                ],
+                startingItems: ["Cajado de Carvalho", "Poção de Cura (2)", "Túnica do Druida"]
+            }
+        };
+        
+        // Locations data
+        const locations = {
+            thais: {
+                name: "Cidade de Thais",
+                description: "A capital do reino, uma cidade movimentada com pessoas de todos os tipos.",
+                connections: ["north", "east", "south", "west"],
+                north: "north_gate",
+                east: "east_gate",
+                south: "south_gate",
+                west: "west_gate",
+                npcs: ["mercador", "guarda", "bardo"],
+                quests: ["ratazana", "entrega"],
+                image: "https://i.imgur.com/XJQZQ9q.jpg"
+            },
+            north_gate: {
+                name: "Portão Norte de Thais",
+                description: "O portão norte da cidade, que leva para as terras selvagens do norte.",
+                connections: ["south", "north"],
+                south: "thais",
+                north: "north_road",
+                npcs: ["guarda"],
+                enemies: ["ratazana"],
+                image: "https://i.imgur.com/YJQZQ9q.jpg"
+            },
+            // More locations can be added here
+        };
+        
+        // Enemies data
+        const enemies = {
+            ratazana: {
+                name: "Ratazana Gigante",
+                description: "Um roedor enorme e agressivo, comum nos esgotos e áreas abandonadas.",
+                stats: {
+                    str: 12,
+                    dex: 14,
+                    con: 10,
+                    health: 20,
+                    armor: 2
+                },
+                attacks: [
+                    { name: "Mordida", damage: "1d6+2" },
+                    { name: "Arranhão", damage: "1d4+1" }
+                ],
+                exp: 25,
+                gold: "1d6",
+                loot: ["Pele de Ratazana", "Dente de Ratazana"]
+            },
+            // More enemies can be added here
+        };
+        
+        // Quests data
+        const quests = {
+            ratazana: {
+                name: "Problema com Ratazanas",
+                description: "O mercador está tendo problemas com ratazanas em seu depósito. Ele oferece 50 de ouro por cada 5 caudas de ratazana.",
+                objective: "Coletar 5 caudas de ratazana",
+                reward: 50,
+                requiredItem: "Cauda de Ratazana",
+                requiredCount: 5,
+                completed: false
+            },
+            entrega: {
+                name: "Entrega Especial",
+                description: "O bardo precisa que você entregue uma carta para sua amada na vila ao norte.",
+                objective: "Entregar a carta para a amada do bardo",
+                reward: 30,
+                requiredItem: "Carta do Bardo",
+                requiredCount: 1,
+                targetLocation: "north_village",
+                completed: false
+            }
+        };
+        
+        // Story segments
+        const storySegments = {
+            start: {
+                text: "Você acorda em uma estalagem simples na cidade de Thais. O sol está nascendo e você pode ouvir os sons da cidade despertando. Um novo dia começa, e com ele, novas oportunidades. O que você faz?",
+                options: [
+                    { text: "Sair da estalagem e explorar a cidade", next: "explore_city" },
+                    { text: "Conversar com o estalajadeiro", next: "talk_innkeeper" },
+                    { text: "Verificar seu equipamento", next: "check_gear" }
+                ]
+            },
+            explore_city: {
+                text: "Você sai da estalagem e se encontra na praça central de Thais. A cidade está movimentada, com mercadores anunciando seus produtos, guardas patrulhando e camponeses realizando suas tarefas diárias. Você vê várias direções que pode seguir.",
+                options: [
+                    { text: "Ir para o mercado", next: "market" },
+                    { text: "Ir para o templo", next: "temple" },
+                    { text: "Ir para a guilda dos aventureiros", next: "adventurers_guild" },
+                    { text: "Voltar para a estalagem", next: "start" }
+                ]
+            },
+            // More story segments can be added here
+        };
+        
+        // Game functions
+        function startNewGame() {
+            document.getElementById("main-menu").style.display = "none";
+            document.getElementById("character-creation").style.display = "block";
+        }
+        
+        function loadGame() {
+            // In a real game, this would load from localStorage
+            alert("Funcionalidade de carregar jogo não implementada nesta demonstração.");
+        }
+        
+        function showCredits() {
+            document.getElementById("story-text").innerHTML = `
+                <h3>Créditos</h3>
+                <p><strong>Jogo criado por:</strong> Assistente de IA</p>
+                <p><strong>Inspirado em:</strong> Tibia, Dark Souls e Dungeons & Dragons</p>
+                <p><strong>Imagens:</strong> Diversas fontes online</p>
+                <p>Este é um jogo de demonstração criado para fins educacionais.</p>
+            `;
+            
+            const optionsContainer = document.getElementById("options-container");
+            optionsContainer.innerHTML = "";
+            
+            const backBtn = document.createElement("button");
+            backBtn.className = "option-btn";
+            backBtn.textContent = "Voltar ao Menu";
+            backBtn.onclick = function() {
+                document.getElementById("main-menu").style.display = "block";
+                document.getElementById("story-text").innerHTML = "Bem-vindo ao mundo de Tibia, herói. Sua jornada está prestes a começar...";
+                showMainMenuOptions();
+            };
+            
+            optionsContainer.appendChild(backBtn);
+        }
+        
+        function selectClass(className) {
+            gameState.player.class = className;
+            const classData = classes[className];
+            
+            // Set player stats based on class
+            gameState.player.str = classData.stats.str;
+            gameState.player.dex = classData.stats.dex;
+            gameState.player.int = classData.stats.int;
+            gameState.player.con = classData.stats.con;
+            gameState.player.maxHealth = classData.stats.health;
+            gameState.player.health = classData.stats.health;
+            gameState.player.maxMana = classData.stats.mana;
+            gameState.player.mana = classData.stats.mana;
+            
+            // Add class skills
+            gameState.player.skills = [...classData.skills];
+            
+            // Add starting items
+            gameState.player.inventory = [...classData.startingItems];
+            
+            // Show confirmation
+            document.getElementById("story-text").innerHTML = `
+                <h3>Você escolheu ser um ${classData.name}</h3>
+                <p>${classData.description}</p>
+                <p><strong>Habilidades iniciais:</strong></p>
+                <ul>
+                    ${classData.skills.map(skill => `<li>${skill.name}</li>`).join("")}
+                </ul>
+                <p><strong>Itens iniciais:</strong></p>
+                <ul>
+                    ${classData.startingItems.map(item => `<li>${item}</li>`).join("")}
+                </ul>
+            `;
+            
+            const optionsContainer = document.getElementById("options-container");
+            optionsContainer.innerHTML = "";
+            
+            const confirmBtn = document.createElement("button");
+            confirmBtn.className = "option-btn";
+            confirmBtn.textContent = "Confirmar Escolha";
+            confirmBtn.onclick = function() {
+                document.getElementById("character-creation").style.display = "none";
+                startGame();
+            };
+            
+            optionsContainer.appendChild(confirmBtn);
+            
+            const backBtn = document.createElement("button");
+            backBtn.className = "option-btn";
+            backBtn.textContent = "Escolher Outra Classe";
+            backBtn.onclick = function() {
+                document.getElementById("story-text").innerHTML = "Escolha sua classe:";
+                showClassSelection();
+            };
+            
+            optionsContainer.appendChild(backBtn);
+        }
+        
+        function showClassSelection() {
+            const optionsContainer = document.getElementById("options-container");
+            optionsContainer.innerHTML = "";
+            
+            const classSelectionDiv = document.getElementById("class-selection");
+            classSelectionDiv.style.display = "flex";
+        }
+        
+        function confirmName() {
+            const nameInput = document.getElementById("name-input").value.trim();
+            if (nameInput.length < 2) {
+                alert("Por favor, insira um nome válido (pelo menos 2 caracteres)");
+                return;
+            }
+            
+            gameState.player.name = nameInput;
+            document.getElementById("story-text").innerHTML = `
+                <h3>Bem-vindo, ${gameState.player.name}!</h3>
+                <p>Agora, escolha sua classe. Seu destino aguarda.</p>
+            `;
+            
+            document.getElementById("name-input").style.display = "none";
+            document.getElementById("confirm-name").style.display = "none";
+            
+            showClassSelection();
+        }
+        
+        function startGame() {
+            document.getElementById("game-ui").style.display = "block";
+            updateCharacterSheet();
+            
+            // Start the story
+            loadStorySegment("start");
+        }
+        
+        function loadStorySegment(segmentId) {
+            const segment = storySegments[segmentId];
+            if (!segment) {
+                console.error("Segmento de história não encontrado:", segmentId);
+                return;
+            }
+            
+            document.getElementById("story-text").innerHTML = segment.text;
+            
+            const optionsContainer = document.getElementById("options-container");
+            optionsContainer.innerHTML = "";
+            
+            segment.options.forEach(option => {
+                const btn = document.createElement("button");
+                btn.className = "option-btn";
+                btn.textContent = option.text;
+                btn.onclick = function() {
+                    loadStorySegment(option.next);
+                };
+                optionsContainer.appendChild(btn);
+            });
+            
+            // Add standard options
+            addStandardOptions();
+        }
+        
+        function addStandardOptions() {
+            const optionsContainer = document.getElementById("options-container");
+            
+            const charBtn = document.createElement("button");
+            charBtn.className = "option-btn";
+            charBtn.textContent = "Ver Status do Personagem";
+            charBtn.onclick = function() {
+                toggleCharacterSheet();
+            };
+            optionsContainer.appendChild(charBtn);
+            
+            const invBtn = document.createElement("button");
+            invBtn.className = "option-btn";
+            invBtn.textContent = "Ver Inventário";
+            invBtn.onclick = function() {
+                toggleInventory();
+            };
+            optionsContainer.appendChild(invBtn);
+            
+            const skillsBtn = document.createElement("button");
+            skillsBtn.className = "option-btn";
+            skillsBtn.textContent = "Ver Habilidades";
+            skillsBtn.onclick = function() {
+                toggleSkills();
+            };
+            optionsContainer.appendChild(skillsBtn);
+            
+            const mapBtn = document.createElement("button");
+            mapBtn.className = "option-btn";
+            mapBtn.textContent = "Ver Mapa";
+            mapBtn.onclick = function() {
+                toggleMap();
+            };
+            optionsContainer.appendChild(mapBtn);
+        }
+        
+        function toggleCharacterSheet() {
+            const charSheet = document.getElementById("character-sheet");
+            charSheet.style.display = charSheet.style.display === "none" ? "block" : "none";
+            
+            // Hide other panels
+            document.getElementById("inventory").style.display = "none";
+            document.getElementById("skills-container").style.display = "none";
+            document.getElementById("map-container").style.display = "none";
+        }
+        
+        function toggleInventory() {
+            const inventory = document.getElementById("inventory");
+            inventory.style.display = inventory.style.display === "none" ? "block" : "none";
+            
+            // Update inventory display
+            if (inventory.style.display === "block") {
+                const itemsContainer = document.getElementById("inventory-items");
+                itemsContainer.innerHTML = "";
+                
+                if (gameState.player.inventory.length === 0) {
+                    itemsContainer.innerHTML = "<p>Seu inventário está vazio.</p>";
+                } else {
+                    gameState.player.inventory.forEach(item => {
+                        const itemDiv = document.createElement("div");
+                        itemDiv.className = "inventory-item";
+                        itemDiv.textContent = item;
+                        itemDiv.onclick = function() {
+                            useItem(item);
+                        };
+                        itemsContainer.appendChild(itemDiv);
+                    });
+                }
+            }
+            
+            // Hide other panels
+            document.getElementById("character-sheet").style.display = "none";
+            document.getElementById("skills-container").style.display = "none";
+            document.getElementById("map-container").style.display = "none";
+        }
+        
+        function toggleSkills() {
+            const skillsContainer = document.getElementById("skills-container");
+            skillsContainer.style.display = skillsContainer.style.display === "none" ? "block" : "none";
+            
+            // Update skills display
+            if (skillsContainer.style.display === "block") {
+                const skillsList = document.getElementById("skills-list");
+                skillsList.innerHTML = "";
+                
+                gameState.player.skills.forEach(skill => {
+                    const skillDiv = document.createElement("div");
+                    skillDiv.className = "skill";
+                    
+                    const nameSpan = document.createElement("span");
+                    nameSpan.className = "skill-name";
+                    nameSpan.textContent = skill.name + ": ";
+                    skillDiv.appendChild(nameSpan);
+                    
+                    const descSpan = document.createElement("span");
+                    if (skill.type === "attack" || skill.type === "spell") {
+                        descSpan.textContent = `Causa ${skill.damage} de dano`;
+                    } else if (skill.type === "defense") {
+                        descSpan.textContent = `Proporciona ${skill.bonus} de defesa`;
+                    } else if (skill.type === "heal") {
+                        descSpan.textContent = `Cura ${skill.heal} pontos de vida`;
+                    }
+                    
+                    if (skill.cost > 0) {
+                        descSpan.textContent += ` (Custo: ${skill.cost} de mana)`;
+                    }
+                    
+                    skillDiv.appendChild(descSpan);
+                    skillsList.appendChild(skillDiv);
+                });
+            }
+            
+            // Hide other panels
+            document.getElementById("character-sheet").style.display = "none";
+            document.getElementById("inventory").style.display = "none";
+            document.getElementById("map-container").style.display = "none";
+        }
+        
+        function toggleMap() {
+            const mapContainer = document.getElementById("map-container");
+            mapContainer.style.display = mapContainer.style.display === "none" ? "block" : "none";
+            
+            // Update map display
+            if (mapContainer.style.display === "block") {
+                const mapDiv = document.getElementById("map");
+                // Simple ASCII map - in a real game this would be more dynamic
+                mapDiv.textContent = `
+                    [???]---[Floresta]
+                       |
+                    [Thais]---[Portão Leste]
+                       |
+                    [Portão Sul]
+                `;
+            }
+            
+            // Hide other panels
+            document.getElementById("character-sheet").style.display = "none";
+            document.getElementById("inventory").style.display = "none";
+            document.getElementById("skills-container").style.display = "none";
+        }
+        
+        function updateCharacterSheet() {
+            document.getElementById("char-name").textContent = gameState.player.name;
+            document.getElementById("char-class").textContent = classes[gameState.player.class].name;
+            document.getElementById("char-level").textContent = gameState.player.level;
+            document.getElementById("char-exp").textContent = `${gameState.player.exp}/${gameState.player.nextLevelExp}`;
+            document.getElementById("char-health").textContent = `${gameState.player.health}/${gameState.player.maxHealth}`;
+            document.getElementById("char-mana").textContent = `${gameState.player.mana}/${gameState.player.maxMana}`;
+            document.getElementById("char-gold").textContent = gameState.player.gold;
+            
+            document.getElementById("char-str").textContent = gameState.player.str;
+            document.getElementById("char-dex").textContent = gameState.player.dex;
+            document.getElementById("char-int").textContent = gameState.player.int;
+            document.getElementById("char-con").textContent = gameState.player.con;
+            
+            // Update health bar
+            const healthPercent = (gameState.player.health / gameState.player.maxHealth)
